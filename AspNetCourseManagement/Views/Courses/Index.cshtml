@@ -1,0 +1,125 @@
+@model CourseListViewModel
+@{
+    ViewData["Title"] = "Danh sách khóa học";
+    var f = Model.Filter;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Danh sách khóa học</h2>
+    <a class="btn btn-success" asp-action="Create">+ Thêm khóa học</a>
+</div>
+
+@* Form tìm kiếm / lọc / sắp xếp (GET). Giá trị đã nhập được giữ lại sau khi tìm kiếm. *@
+<form method="get" asp-action="Index" class="card card-body mb-3">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <label class="form-label">Tìm theo tên khóa học</label>
+            <input type="text" name="keyword" value="@f.Keyword" class="form-control" placeholder="Nhập một phần tên..." />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Loại khóa học</label>
+            <select name="categoryId" class="form-select">
+                <option value="">-- Tất cả --</option>
+                @foreach (var c in Model.Categories)
+                {
+                    <option value="@c.Id" selected="@(f.CategoryId == c.Id)">@c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Trạng thái</label>
+            <select name="status" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="active" selected="@(f.Status == "active")">Đang tuyển sinh</option>
+                <option value="inactive" selected="@(f.Status == "inactive")">Ngừng tuyển sinh</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Học phí tối thiểu</label>
+            <input type="number" name="minFee" value="@f.MinFee" min="0" step="any" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Học phí tối đa</label>
+            <input type="number" name="maxFee" value="@f.MaxFee" min="0" step="any" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Sắp xếp</label>
+            <select name="sort" class="form-select">
+                <option value="">Mặc định</option>
+                <option value="fee_asc" selected="@(f.Sort == "fee_asc")">Học phí tăng dần</option>
+                <option value="fee_desc" selected="@(f.Sort == "fee_desc")">Học phí giảm dần</option>
+                <option value="duration_asc" selected="@(f.Sort == "duration_asc")">Thời lượng tăng dần</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-primary">Tìm kiếm / Lọc</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Xóa lọc</a>
+        </div>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-warning">@Model.ErrorMessage</div>
+}
+
+@if (!Model.Courses.Any())
+{
+    <div class="alert alert-info">Không tìm thấy khóa học nào phù hợp với điều kiện tìm kiếm.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle bg-white">
+            <thead class="table-dark">
+            <tr>
+                <th>Ảnh</th>
+                <th>Tên khóa học</th>
+                <th>Loại khóa học</th>
+                <th class="text-end">Học phí</th>
+                <th class="text-end">Thời lượng (giờ)</th>
+                <th>Phân loại</th>
+                <th>Trạng thái</th>
+                <th style="width: 190px;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in Model.Courses)
+            {
+                var thumb = c.Images.FirstOrDefault(i => i.IsThumbnail);
+                <tr class="@(c.IsActive ? "" : "table-secondary")">
+                    <td>
+                        @if (thumb != null)
+                        {
+                            <img class="thumb" src="@thumb.ImageUrl" alt="@c.Name" onerror="this.style.display='none'" />
+                        }
+                        else
+                        {
+                            <span class="text-muted small">Chưa có ảnh</span>
+                        }
+                    </td>
+                    <td>@c.Name</td>
+                    <td>@c.CourseCategory?.Name</td>
+                    <td class="text-end">@Format.Vnd(c.TuitionFee)</td>
+                    <td class="text-end">@c.Duration</td>
+                    <td>
+                        <span class="badge @(c.Duration <= 30 ? "bg-info text-dark" : "bg-primary")">@c.DurationType</span>
+                    </td>
+                    <td>
+                        <span class="badge @(c.IsActive ? "bg-success" : "bg-secondary")">@c.StatusText</span>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@c.Id">Chi tiết</a>
+                        <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@c.Id">Sửa</a>
+                        <form asp-action="Delete" asp-route-id="@c.Id" method="post" class="d-inline"
+                              onsubmit="return confirm('Xóa khóa học này?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <p class="text-muted">Tìm thấy @Model.Courses.Count khóa học.</p>
+}

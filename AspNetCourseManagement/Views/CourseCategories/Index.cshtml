@@ -1,0 +1,44 @@
+@model List<CourseCategory>
+@{
+    ViewData["Title"] = "Loại khóa học";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Loại khóa học</h2>
+    <a class="btn btn-success" asp-action="Create">+ Thêm loại khóa học</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Chưa có loại khóa học nào.</div>
+}
+else
+{
+    <table class="table table-bordered align-middle bg-white">
+        <thead class="table-dark">
+        <tr>
+            <th>Tên loại</th>
+            <th>Mô tả</th>
+            <th class="text-end">Số khóa học</th>
+            <th style="width: 160px;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.Description</td>
+                <td class="text-end">@c.Courses.Count</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@c.Id">Sửa</a>
+                    <form asp-action="Delete" asp-route-id="@c.Id" method="post" class="d-inline"
+                          onsubmit="return confirm('Xóa loại khóa học này?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

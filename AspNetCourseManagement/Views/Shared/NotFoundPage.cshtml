@@ -1,0 +1,12 @@
+@model string
+@{
+    ViewData["Title"] = "Không tìm thấy";
+}
+
+<div class="card border-warning">
+    <div class="card-body text-center py-5">
+        <h1 class="display-6">404 - Không tìm thấy</h1>
+        <p class="lead">@Model</p>
+        <a class="btn btn-primary" asp-controller="Courses" asp-action="Index">Về danh sách khóa học</a>
+    </div>
+</div>

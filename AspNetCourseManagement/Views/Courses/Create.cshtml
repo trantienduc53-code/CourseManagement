@@ -1,0 +1,20 @@
+@model Course
+@{
+    ViewData["Title"] = "Thêm khóa học";
+}
+
+<h2>Thêm khóa học</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" method="post" novalidate>
+            <partial name="_Form" model="Model" />
+            <button type="submit" class="btn btn-success">Lưu</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Hủy</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

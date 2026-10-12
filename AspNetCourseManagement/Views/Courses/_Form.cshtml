@@ -1,0 +1,41 @@
+@model Course
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="CourseCategoryId" class="form-label"></label>
+    <select asp-for="CourseCategoryId" asp-items="@((IEnumerable<SelectListItem>)ViewBag.Categories)" class="form-select">
+        <option value="">-- Chọn loại khóa học --</option>
+    </select>
+    <span asp-validation-for="CourseCategoryId" class="text-danger"></span>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="TuitionFee" class="form-label"></label>
+        <input asp-for="TuitionFee" type="number" step="any" min="0" class="form-control" />
+        <span asp-validation-for="TuitionFee" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="Duration" class="form-label"></label>
+        <input asp-for="Duration" type="number" step="1" min="0" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+
+<div class="form-check mb-3">
+    <input asp-for="IsActive" class="form-check-input" />
+    <label asp-for="IsActive" class="form-check-label"></label>
+</div>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head(${title})}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container pb-5">
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <h2 th:text="${title}">Khóa học</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{${formAction}}" th:object="${form}" method="post" novalidate>
+
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                    <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="name">Tên khóa học</label>
+                    <input type="text" th:field="*{name}" class="form-control" th:errorclass="is-invalid"/>
+                    <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="courseCategoryId">Loại khóa học</label>
+                    <select th:field="*{courseCategoryId}" class="form-select" th:errorclass="is-invalid">
+                        <option value="">-- Chọn loại khóa học --</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{courseCategoryId}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="tuitionFee">Học phí (VNĐ)</label>
+                        <input type="number" step="any" min="0" th:field="*{tuitionFee}" class="form-control"
+                               th:errorclass="is-invalid"/>
+                        <div class="invalid-feedback" th:errors="*{tuitionFee}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="duration">Thời lượng (giờ)</label>
+                        <input type="number" step="1" min="0" th:field="*{duration}" class="form-control"
+                               th:errorclass="is-invalid"/>
+                        <div class="invalid-feedback" th:errors="*{duration}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="description">Mô tả</label>
+                    <textarea rows="4" th:field="*{description}" class="form-control" th:errorclass="is-invalid"></textarea>
+                    <div class="invalid-feedback" th:errors="*{description}"></div>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox" th:field="*{active}" class="form-check-input"/>
+                    <label class="form-check-label" for="active1">Đang tuyển sinh</label>
+                </div>
+
+                <button type="submit" class="btn btn-success">Lưu</button>
+                <a class="btn btn-outline-secondary" th:href="@{/courses}">Hủy</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Không tìm thấy')}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container pb-5">
+    <div class="card border-warning">
+        <div class="card-body text-center py-5">
+            <h1 class="display-6">Không tìm thấy</h1>
+            <p class="lead" th:text="${message}">Dữ liệu bạn yêu cầu không tồn tại.</p>
+            <a class="btn btn-primary" th:href="@{/courses}">Về danh sách khóa học</a>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
